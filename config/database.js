@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Recipe = require('../models/recipe')
-mongoose.connect('mongodb://localhost/recipes',
+mongoose.connect(process.env.DATABASE_URL,
     {useNewUrlParser: true,
     useUnifiedTopology: true}
 )
