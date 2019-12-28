@@ -1,6 +1,11 @@
+const Recipe = require('../models/recipe')
+
 const index = (req, res) => {
-    res.render('recipes/index', {title: 'Recipes'})
+    Recipe.find({}, function(err, recipes){
+        res.render('recipes/index', {title: 'Recipes', recipes})
+    })
 }
+
 module.exports = {
     index
 }
