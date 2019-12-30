@@ -1,0 +1,41 @@
+<%- include ../partials/header.ejs %>
+<section class='header'>
+    <div class='jumbotron jumbo-header'>
+        <p>New Recipe</p>
+    </div>
+</section>
+<section class='container'>
+    <form id='new-recipe-form' action='/recipes' method='POST'>
+        <div class='d-flex flex-column'>
+            <p>
+                <label>Recipe Name: </label>
+                <input type='text' name='name'>
+            </p>
+            <p>
+                <label>Image URL: </label>
+                <input type='text' name='photo'>
+            </p>
+            <p>
+                <label>Ingredients, Separated by Semi-Colons: </label>
+                <input type='text' name='ingredients'>                
+            </p>
+            <p>
+                <label>Directions, Separated by Semi-Colons: </label>
+                <input type='text' name='directions'>
+            </p>
+            <p>
+                <label>Notes</label>
+                <input type='text' name='notes'>
+            </p>
+            <p>
+                <label>Tags, Separated by Semi-Colons: </label>
+                <input type='text' name='tags'>
+            </p>
+            <div class='d-flex justify-content-around'>
+                <a href="/recipes" class="btn btn-danger">Cancel</a>
+                <input type='submit' class="btn btn-primary" value='Create New Recipe'>
+            </div>
+        </div>
+    </form>
+</section>
+<%- include ../partials/footer.ejs %>
