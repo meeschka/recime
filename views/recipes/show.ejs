@@ -1,0 +1,47 @@
+<%- include ../partials/header.ejs %>
+<section class='header'>
+    <div class='jumbotron jumbo-header'>
+        <p><%=recipe.name%></p>
+    </div>
+</section>
+<section class='container'>
+    <div class='row'>
+        <div class='col-xs-12 col-md-6 col-xl-5'>
+            <img src="../<%=recipe.photo%>" class="detail-shot" alt="<%=recipe.name%>">
+        </div>
+        <div class='col-xs-12 col-md-6 col-xl-7'>
+            <div>
+                <h4>Ingredients</h4>
+                <ul>
+                    <% recipe.ingredients.forEach(ingredient => { %>
+                        <li><%=ingredient%></li>
+                    <% }) %>
+                </ul>
+                <h4>Directions</h4>
+                <ul>
+                    <% recipe.directions.forEach(direction => { %>
+                        <li><%=direction%></li>
+                    <% }) %>
+                </ul>
+                <h4>Notes</h4>
+                <p><%=recipe.notes%></p>
+            </div>
+            <% if(recipe.parentRecipe) { %>
+                <p>This recipe is forked from <%=recipe.parentRecipe%></p>
+            <% } else { %>
+                <p>This is an original recipe</p>
+            <% } %>
+            <% if(recipe.forks) { %>
+                <p>This recipe has been forked <%=recipe.forks.length%> times.</p>
+            <% } %>
+    
+            <div class='d-flex justify-content-end btn-row'>
+                <a href="#" class="btn btn-primary">Edit</a>
+                <a href="#" class="btn btn-primary">Fork It</a>
+                <a href="#" class="btn btn-primary">Mark as 'To Try'</a>
+            </div>
+        </div>
+    </div>
+
+</section>
+<%- include ../partials/footer.ejs %>
