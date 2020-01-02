@@ -39,7 +39,7 @@ const create = (req, res) => {
         User.findById(req.user._id, function(err, user){
             user.recipes.push(recipe._id);
             user.save(function(err) {
-                console.log(user);
+                console.log(err);
             })
         })
     }
@@ -48,12 +48,76 @@ const create = (req, res) => {
         console.log(recipe);
         res.redirect('/recipes')
     })
-    //need to create new recipe
-    //then add recipe to user object
 
 }
+const fork = (req, res) => {
+    //orig recipe is in req.params.id
+    Recipe.findById(req.params.id)
+        .then(()=>{
+            console.log('forked');
+        })
+        .exec(function(err, recipe){
+            res.render('recipes/show', {
+                title: recipe.eventNames,
+                recipe,
+                user: req.user
+            })
+        })
+    //find recipe and copy to new recipe. add orig to parent.
+    //add new recipe to forks in orig
+    //add new recipe to parent user model
+    //redirect to new recipe show page or old one?
+}
 const deleteRecipe = (req, res) => {
-    //for delete, need to find all forks and fork parents and remove from those lists or handle gaps somehow
+    //deletes recipes, removes recipe list from user list, removes recipe as a parent or fork from all other recipes
+    let parent, forks;
+    Recipe.findByIdAndDelete(req.params.id)
+        .then(deletedRecipe => {
+            parent = deletedRecipe.parentRecipe;
+            forks = deletedRecipe.forks;
+            deletedId = deletedRecipe._id;
+        })
+        .then(()=>{
+            if (req.user) {
+                User.findById(req.user._id, (err, user) => {
+                    let index = user.recipes.indexOf(deletedId);
+                    if (index) user.recipes.splice(index, 1);
+                    user.save(function(err) {
+                        console.log(err);
+                    })
+                })
+            }
+        })
+        .then(()=>{
+            if(parent) {
+                Recipe.findById(parent, (err, recipe)=>{
+                    let index = recipe.forks.indexOf(deletedId);
+                    if (index) recipe.forks.splice(index, 1);
+                    recipe.save(function(err){
+                        console.log(err);
+                    })
+                })
+            }     
+        })
+        .then(()=>{
+            if (forks) {
+                forks.forEach((fork)=>{
+                    Recipe.findById(fork, (err, recipe)=>{
+                        //if deleted recipe had parent, make it the new parent
+                        if (parent) {
+                            recipe.parentRecipe = parent;
+                        } else recipe.parentRecipe = ''; 
+                    })
+                })
+            }
+        })
+        .then(()=>{
+            res.redirect('/recipes')
+        })
+        .catch((err)=>{
+            console.log(err);
+            res.redirect('/recipes');
+        })
 }
 
 module.exports = {
@@ -61,5 +125,6 @@ module.exports = {
     show,
     new: newRecipe,
     create,
+    fork,
     delete: deleteRecipe
 }
