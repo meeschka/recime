@@ -6,7 +6,7 @@ router.get('/', recipeCtrl.index);
 router.post('/', recipeCtrl.create);
 router.get('/new', recipeCtrl.new);
 router.get('/:id', recipeCtrl.show);
-router.get('/:id/fork', recipeCtrl.fork);
+router.post('/:id/fork', recipeCtrl.fork);
 router.delete('/:id', recipeCtrl.delete);
 
 module.exports = router;

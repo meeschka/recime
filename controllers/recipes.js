@@ -53,15 +53,45 @@ const create = (req, res) => {
 const fork = (req, res) => {
     //orig recipe is in req.params.id
     Recipe.findById(req.params.id)
-        .then(()=>{
-            console.log('forked');
-        })
-        .exec(function(err, recipe){
-            res.render('recipes/show', {
-                title: recipe.eventNames,
-                recipe,
-                user: req.user
+        .then(recipe=>{
+            let newRecipe = new Recipe({
+                name: recipe.name,
+                photo: recipe.photo,
+                ingredients: recipe.ingredients,
+                directions: recipe.directions,
+                notes: recipe.notes,
+                tags: recipe.tags,
+                parentRecipe: recipe._id
+            });
+            if (req.user) {
+                User.findById(req.user._id, function(err, user){
+                    user.recipes.push(newRecipe._id);
+                    user.save(function(err) {
+                        console.log(err);
+                    })
+                })
+            }
+            newRecipe.save(function(err) {
+                if (err) return res.redirect(`/recipes/${newRecipe.parentRecipe}`);
+                console.log(newRecipe);
             })
+            return newRecipe;
+        })
+        .then((newRecipe)=>{
+            Recipe.findById(newRecipe.parentRecipe, (err, recipe)=>{
+                recipe.forks.push(newRecipe._id);
+                recipe.save(function(err){
+                    console.log(err)
+                })
+            })
+            return newRecipe;
+        })
+        .then((newRecipe)=>{
+            res.redirect(`/recipes/${newRecipe._id}`)
+        })
+        .catch((err)=>{
+            console.log(err);
+            res.redirect('/recipes');
         })
     //find recipe and copy to new recipe. add orig to parent.
     //add new recipe to forks in orig
