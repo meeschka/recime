@@ -12,12 +12,17 @@ const index = (req, res) => {
 }
 const show = (req, res) => {
     Recipe.findById(req.params.id)
-        .exec(function(err, recipe){
+        .populate('forks')
+        .then(recipe => {
             res.render('recipes/show', {
                 title: recipe.eventNames,
                 recipe,
                 user: req.user
             })
+        })
+        .catch(err => {
+            console.log(err);
+            res.redirect('/recipes');
         })
 }
 const newRecipe = (req, res) => {

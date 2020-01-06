@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 let commentSchema = new mongoose.Schema({
     comment: String
@@ -13,8 +14,8 @@ let recipeSchema = new mongoose.Schema({
     directions: [String],
     notes: String,
     tags: [String],
-    parentRecipe: String,
-    forks: [String],
+    parentRecipe: {type: Schema.Types.ObjectId, ref: 'Recipe'},
+    forks: [{type: Schema.Types.ObjectId, ref: 'Recipe'}],
     comments: [commentSchema],
 }, {
     timestamps: true

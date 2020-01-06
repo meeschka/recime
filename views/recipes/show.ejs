@@ -7,7 +7,7 @@
 <section class='container'>
     <div class='row'>
         <div class='col-xs-12 col-md-6 col-xl-5'>
-            <img src="../<%=recipe.photo%>" class="detail-shot" alt="<%=recipe.name%>">
+            <img src="<%=recipe.photo%>" class="detail-shot" alt="<%=recipe.name%>">
         </div>
         <div class='col-xs-12 col-md-6 col-xl-7'>
             <div>
@@ -33,10 +33,15 @@
             <% } %>
             <% if(recipe.forks) { %>
                 <p>This recipe has been forked <%=recipe.forks.length%> times</p>
+                <ul>
+                    <% recipe.forks.forEach(fork => {%>
+                        <li><%= fork.name %>, <%= fork._id%></li>
+                    <% }) %>
+                </ul>
             <% } %>
     
             <div class='d-flex justify-content-end btn-row'>
-                <% if (currentUser.recipes.indexOf(recipe._id)>=0)  { %>
+                <% if (currentUser && currentUser.recipes.indexOf(recipe._id)>=0)  { %>
                     <form method='post' action='/recipes/<%=recipe._id%>?_method=delete'>
                         <input type='submit' value='Delete' class='btn btn-danger'>
                     </form>
@@ -45,7 +50,7 @@
                 <form method='post' action='/recipes/<%=recipe._id%>/fork'>
                     <input type='submit' value='Fork It' class='btn btn-primary'>
                 </form>
-                <a href="#" class="btn btn-primary">Mark as 'To Try'</a>
+                <button type="button" class="btn btn-primary">Mark as 'To Try'</button>
             </div>
         </div>
     </div>
