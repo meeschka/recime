@@ -27,12 +27,12 @@
                 <p><%=recipe.notes%></p>
             </div>
             <% if(recipe.parentRecipe) { %>
-                <p>This recipe is forked from <%=recipe.parentRecipe%></p>
+                <p>This recipe is forked from <a href='/recipes/<%=recipe.parentRecipe%>'>this recipe</a></p>
             <% } else { %>
                 <p>This is an original recipe</p>
             <% } %>
             <% if(recipe.forks) { %>
-                <p>This recipe has been forked <%=recipe.forks.length%> times.</p>
+                <p>This recipe has been forked <%=recipe.forks.length%> times</p>
             <% } %>
     
             <div class='d-flex justify-content-end btn-row'>

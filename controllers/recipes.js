@@ -104,9 +104,6 @@ const deleteRecipe = (req, res) => {
             parent = deletedRecipe.parentRecipe;
             forks = deletedRecipe.forks;
             deletedId = deletedRecipe._id;
-            console.log(`parent recipe is ${parent}`);
-            console.log(`forks are ${forks}`);
-            console.log(`deletedRecipe is ${deletedRecipe}`);
         })
         .then(()=>{
             if (req.user) {
@@ -136,23 +133,16 @@ const deleteRecipe = (req, res) => {
         })
         .then(()=>{
             if (forks) {
-                console.log('entered forks loop');
                 forks.forEach((fork)=>{
-                    console.log(`for fork ${fork}`)
                     Recipe.findById(fork)
                         .then(recipe => {
-                            console.log('found fork recipe')
-                            console.log(recipe);
-                            console.log(`new parent: ${parent}`)
                             //if deleted recipe had parent, make it the new parent
                             if (parent) {
                                 recipe.parentRecipe = parent;
                                 //need to add recipe as new child of parent
                                 Recipe.findById(parent)
                                     .then(parentRecipe => {
-                                        console.log(`parent recipe forks before were: ${parentRecipe.forks}`)
                                         parentRecipe.forks.push(recipe._id);
-                                        console.log(`parent recipe forks are now: ${parentRecipe.forks}`)
                                         parentRecipe.save(function(err){
                                             console.log(err)
                                         })
@@ -179,12 +169,45 @@ const deleteRecipe = (req, res) => {
             res.redirect('/recipes');
         })
 }
-
+const mine = (req, res, next) => {
+    if(req.user) {
+        User.findById(req.user._id).populate('recipes')
+        .then (user => {
+            res.render('recipes/index', {
+                title: `${user.name}'s Recipes`,
+                recipes: user.recipes,
+                user: req.user
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            res.redirect('/recipes');
+        })
+    } else res.redirect('/auth/google')
+}
+const toTry = (req, res, next) => {
+    if(req.user) {
+        User.findById(req.user._id).populate('recipesToTry')
+        .then (user => {
+            res.render('recipes/index', {
+                title: `${user.name}'s Recipes`,
+                recipes: user.recipesToTry,
+                user: req.user
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            res.redirect('/recipes');
+        })
+    } else res.redirect('/auth/google')
+}
 module.exports = {
     index,
     show,
     new: newRecipe,
     create,
     fork,
-    delete: deleteRecipe
+    delete: deleteRecipe,
+    toTry,
+    mine
 }

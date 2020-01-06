@@ -5,6 +5,8 @@ const recipeCtrl = require('../controllers/recipes.js');
 router.get('/', recipeCtrl.index);
 router.post('/', recipeCtrl.create);
 router.get('/new', recipeCtrl.new);
+router.get('/myrecipes', recipeCtrl.mine);
+router.get('/totry', recipeCtrl.toTry);
 router.get('/:id', recipeCtrl.show);
 router.post('/:id/fork', recipeCtrl.fork);
 router.delete('/:id', recipeCtrl.delete);

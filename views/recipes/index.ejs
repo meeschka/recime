@@ -6,6 +6,9 @@
 </section>
 <a class='btn btn-primary' href='/recipes/new'>Add a New Recipe!</a>
 <section class='container card-container'>
+  <% if (recipes.length<1) { %>
+    <h1>Looks like you haven't saved any recipes here! You can browse recipes <a href='/recipes'>here!</a></h1>
+  <% } %>
   <% recipes.forEach(recipe=> { %>
     <div class="card">
       <img src="../<%=recipe.photo%>" class="card-img-top" alt="<%=recipe.name%>">
