@@ -45,7 +45,6 @@ const create = (req, res) => {
     }
     recipe.save(function(err) {
         if (err) return res.redirect('/recipes/new');
-        console.log(recipe);
         res.redirect('/recipes')
     })
 
@@ -73,7 +72,6 @@ const fork = (req, res) => {
             }
             newRecipe.save(function(err) {
                 if (err) return res.redirect(`/recipes/${newRecipe.parentRecipe}`);
-                console.log(newRecipe);
             })
             return newRecipe;
         })
@@ -106,6 +104,9 @@ const deleteRecipe = (req, res) => {
             parent = deletedRecipe.parentRecipe;
             forks = deletedRecipe.forks;
             deletedId = deletedRecipe._id;
+            console.log(`parent recipe is ${parent}`);
+            console.log(`forks are ${forks}`);
+            console.log(`deletedRecipe is ${deletedRecipe}`);
         })
         .then(()=>{
             if (req.user) {
@@ -120,24 +121,53 @@ const deleteRecipe = (req, res) => {
         })
         .then(()=>{
             if(parent) {
-                Recipe.findById(parent, (err, recipe)=>{
-                    let index = recipe.forks.indexOf(deletedId);
-                    if (index) recipe.forks.splice(index, 1);
-                    recipe.save(function(err){
+                Recipe.findById(parent)
+                    .then(recipe =>{
+                        let index = recipe.forks.indexOf(deletedId);
+                        if (index) recipe.forks.splice(index, 1);
+                        recipe.save(function(err){
+                            console.log(err);
+                        })
+                    })
+                    .catch(err =>{
                         console.log(err);
                     })
-                })
             }     
         })
         .then(()=>{
             if (forks) {
+                console.log('entered forks loop');
                 forks.forEach((fork)=>{
-                    Recipe.findById(fork, (err, recipe)=>{
-                        //if deleted recipe had parent, make it the new parent
-                        if (parent) {
-                            recipe.parentRecipe = parent;
-                        } else recipe.parentRecipe = ''; 
-                    })
+                    console.log(`for fork ${fork}`)
+                    Recipe.findById(fork)
+                        .then(recipe => {
+                            console.log('found fork recipe')
+                            console.log(recipe);
+                            console.log(`new parent: ${parent}`)
+                            //if deleted recipe had parent, make it the new parent
+                            if (parent) {
+                                recipe.parentRecipe = parent;
+                                //need to add recipe as new child of parent
+                                Recipe.findById(parent)
+                                    .then(parentRecipe => {
+                                        console.log(`parent recipe forks before were: ${parentRecipe.forks}`)
+                                        parentRecipe.forks.push(recipe._id);
+                                        console.log(`parent recipe forks are now: ${parentRecipe.forks}`)
+                                        parentRecipe.save(function(err){
+                                            console.log(err)
+                                        })
+                                    })
+                                    .catch(err => {
+                                        recipe.parentRecipe = '';
+                                    })
+                            } else recipe.parentRecipe = ''; 
+                            recipe.save(function(err){
+                                console.log(err);
+                            })
+                        })
+                        .catch (err => {
+                            console.log(err);
+                        })
                 })
             }
         })
