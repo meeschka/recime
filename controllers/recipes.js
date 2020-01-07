@@ -32,13 +32,14 @@ const newRecipe = (req, res) => {
     })
 }
 const create = (req, res) => {
+    console.log(req.body);
     let recipe = new Recipe({
         name: req.body.name,
         photo: req.body.photo,
-        ingredients: req.body.ingredients.split('; '),
-        directions: req.body.directions.split('; '),
+        ingredients: req.body.ingredients,
+        directions: req.body.directions,
         notes: req.body.notes,
-        tags: req.body.tags.split('; '),
+        tags: req.body.tags.split(', '),
     })
     if (req.user) {
         User.findById(req.user._id, function(err, user){

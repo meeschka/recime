@@ -7,30 +7,34 @@
 <section class='container'>
     <form id='new-recipe-form' action='/recipes' method='POST'>
         <div class='d-flex flex-column'>
-            <p>
+            <div class='form-group'>
                 <label>Recipe Name: </label>
-                <input type='text' name='name'>
-            </p>
-            <p>
-                <label>Image URL: </label>
-                <input type='text' name='photo'>
-            </p>
-            <p>
-                <label>Ingredients, Separated by Semi-Colons: </label>
-                <input type='text' name='ingredients'>                
-            </p>
-            <p>
-                <label>Directions, Separated by Semi-Colons: </label>
-                <input type='text' name='directions'>
-            </p>
-            <p>
+                <input class='form-control' type='text' name='name'>
+            </div class='form-group'>
+            <div class='form-group'>
+                <label> Image URL: </label>
+                <input class='form-control' type='text' name='photo'>
+            </div>
+            <div class='form-group'>
+                <label>Ingredients </label>
+                <input class='form-control bottom-space' type='text' name='ingredients'>                
+                <input class='form-control bottom-space' type='text' name='ingredients'>
+                <button id='add-ingredients' class='btn btn-sm'><i class="fas fa-plus-circle"></i> Add Ingredients</button id='add-'>                
+            </div>
+            <div class='form-group'>
+                <label>Directions </label>
+                <input class='form-control bottom-space' type='text' name='directions'>
+                <input class='form-control bottom-space' type='text' name='directions'>
+                <button id='add-directions' class='btn btn-sm'><i class="fas fa-plus-circle"></i> Add Directions</button>
+            </div>
+            <div class='form-group'>
                 <label>Notes</label>
-                <input type='text' name='notes'>
-            </p>
-            <p>
-                <label>Tags, Separated by Semi-Colons: </label>
-                <input type='text' name='tags'>
-            </p>
+                <textarea class='form-control' ea name='notes'></textarea>
+            </div>
+            <div class='form-group'>
+                <label>Tags, Separated by Commas: </label>
+                <input class='form-control' type='text' name='tags'>
+            </div>
             <div class='d-flex justify-content-around'>
                 <a href="/recipes" class="btn btn-danger">Cancel</a>
                 <input type='submit' class="btn btn-primary" value='Create New Recipe'>
@@ -38,4 +42,5 @@
         </div>
     </form>
 </section>
+<script src="/javascripts/form.js" defer></script>
 <%- include ../partials/footer.ejs %>

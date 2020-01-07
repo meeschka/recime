@@ -29,19 +29,7 @@ const toggleToTry = (req, res) => {
             })
     } else res.status(403).json({error: 'You must be logged in to add a recipe to try'})
 }
-const toTry = (req, res) => {
-    //returns true if user has marked recipe as toTry, returns false if user has not
-    if (req.user) {
-        User.findById(req.user._id)
-            .then(user => {
-                if (user.recipesToTry.indexOf(req.params.id) >= 0) {
-                    res.sendStatus(200).json({toTry: true})
-                } else res.sendStatus(200).json({toTry: false})
-            })
-    }
-}
 
 module.exports = {
-    toggleToTry,
-    toTry
+    toggleToTry
 }
