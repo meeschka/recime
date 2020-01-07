@@ -2,9 +2,32 @@ const express = require('express');
 const router = express.Router();
 const recipeCtrl = require('../controllers/recipes.js');
 const auth = require('../middleware/auth');
+const multer = require('multer');
+const cloudinary = require('cloudinary');
+cloudinary.config({ 
+  cloud_name: process.env.CLOUDINARY_NAME, 
+  api_key: process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+let storage = multer.diskStorage({
+    filename: function(req, file, callback) {
+      callback(null, Date.now() + file.originalname);
+    }
+  });
+let imageFilter = function (req, file, cb) {
+    // accept image files only
+    console.log('image filter');
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+        return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+};
+let upload = multer({ storage: storage, fileFilter: imageFilter})
+
 
 router.get('/', recipeCtrl.index);
-router.post('/', auth.isLoggedIn, recipeCtrl.create);
+router.post('/', auth.isLoggedIn, upload.single('image'), recipeCtrl.create);
 router.get('/new', auth.isLoggedIn, recipeCtrl.new);
 router.get('/myrecipes', auth.isLoggedIn, recipeCtrl.mine);
 router.get('/totry', auth.isLoggedIn, recipeCtrl.toTry);

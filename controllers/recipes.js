@@ -1,5 +1,12 @@
 const Recipe = require('../models/recipe')
 const User = require('../models/user')
+const multer = require('multer');
+const cloudinary = require('cloudinary');
+cloudinary.config({ 
+  cloud_name: process.env.CLOUDINARY_NAME, 
+  api_key: process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 const index = (req, res) => {
     Recipe.find({}, function(err, recipes){
@@ -32,28 +39,32 @@ const newRecipe = (req, res) => {
     })
 }
 const create = (req, res) => {
-    console.log(req.body);
-    let recipe = new Recipe({
-        name: req.body.name,
-        photo: req.body.photo,
-        ingredients: req.body.ingredients.filter(Boolean),
-        directions: req.body.directions.filter(Boolean),
-        notes: req.body.notes,
-        tags: req.body.tags.split(', '),
-    })
-    if (req.user) {
-        User.findById(req.user._id, function(err, user){
-            user.recipes.push(recipe._id);
-            user.save(function(err) {
-                console.log(err);
-            })
+    cloudinary.v2.uploader.upload(req.file.path, {quality: 'auto'}, function(result, err){
+        if (err) {
+            console.log(err);
+        }
+        let recipe = new Recipe({
+            name: req.body.name,
+            photo: result.secure_url,
+            ingredients: req.body.ingredients.filter(Boolean),
+            directions: req.body.directions.filter(Boolean),
+            notes: req.body.notes,
+            tags: req.body.tags.split(', '),
         })
-    }
-    recipe.save(function(err) {
-        if (err) return res.redirect('/recipes/new');
-        res.redirect('/recipes')
+        console.log(recipe); 
+        if (req.user) {
+            User.findById(req.user._id, function(err, user){
+                user.recipes.push(recipe._id);
+                user.save(function(err) {
+                    console.log(err);
+                })
+            })
+        }
+        recipe.save(function(err) {
+            if (err) return res.redirect('/recipes/new');
+            res.redirect('/recipes')
+        })
     })
-
 }
 const fork = (req, res) => {
     //orig recipe is in req.params.id
@@ -233,12 +244,27 @@ const update = (req, res, next) => {
     Recipe.findByIdAndUpdate(req.params.id, newRecipe, {new: true})
         .then(recipe => {
             res.redirect(`/recipes/${recipe._id}`)
-        })
+        }) 
         .catch(err => {
             console.log(err);
             res.redirect('back')
         })
 }
+
+let storage = multer.diskStorage({
+    filename: function(req, file, callback) {
+      callback(null, Date.now() + file.originalname);
+    }
+  });
+let imageFilter = function (req, file, cb) {
+    // accept image files only
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+        return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+};
+let upload = multer({ storage: storage, fileFilter: imageFilter})
+
 module.exports = {
     index,
     show,
@@ -249,5 +275,6 @@ module.exports = {
     toTry,
     mine,
     edit,
-    update
+    update,
+    upload
 }
