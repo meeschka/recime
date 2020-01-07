@@ -32,10 +32,11 @@
                 <p>This is an original recipe</p>
             <% } %>
             <% if(recipe.forks) { %>
-                <p>This recipe has been forked <%=recipe.forks.length%> times</p>
+                <% let times = recipe.forks.length === 1 ? 'time' : 'times' %>
+                <p>This recipe has been forked <%=recipe.forks.length%> <%=times%>:</p>
                 <ul>
                     <% recipe.forks.forEach(fork => {%>
-                        <li><%= fork.name %>, <%= fork._id%></li>
+                        <li><a href='/recipes/<%=fork._id%>'><%= fork.name %></a></li>
                     <% }) %>
                 </ul>
             <% } %>
