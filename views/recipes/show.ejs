@@ -50,10 +50,14 @@
                 <form method='post' action='/recipes/<%=recipe._id%>/fork'>
                     <input type='submit' value='Fork It' class='btn btn-primary'>
                 </form>
-                <button type="button" class="btn btn-primary">Mark as 'To Try'</button>
+                <% if (currentUser && currentUser.recipesToTry.indexOf(recipe._id) >= 0) { %>
+                    <button type="button" class="btn btn-primary totry-btn">Already In 'To Try'</button>
+                <% } else if (currentUser) { %>
+                    <button type="button" class="btn btn-primary totry-btn">Mark as 'To Try'</button>
+                <% } %>
             </div>
         </div>
     </div>
-
 </section>
+<script src="/javascripts/totry.js" defer></script>
 <%- include ../partials/footer.ejs %>

@@ -6,6 +6,7 @@ const logger = require('morgan');
 const session = require('express-session');
 const passport = require('passport');
 const methodOverride = require('method-override');
+const cors = require('cors');
 
 require('dotenv').config();
 require('./config/database');
@@ -13,7 +14,8 @@ require('./config/passport');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const recipeRouter = require('./routes/recipes')
+const recipeRouter = require('./routes/recipes');
+const apiRecipeRouter = require('./routes/api/recipes');
 
 const app = express();
 
@@ -21,6 +23,8 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+// app.use(cors());
+// app.options('/api/recipes/:id/toggleToTry', cors())
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -43,6 +47,7 @@ app.use(function(req, res, next){
 app.use('/', indexRouter);
 app.use('/recipes', recipeRouter)
 app.use('/users', usersRouter);
+app.use('/api/recipes', apiRecipeRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
