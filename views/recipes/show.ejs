@@ -45,7 +45,7 @@
                     <form method='post' action='/recipes/<%=recipe._id%>?_method=delete'>
                         <input type='submit' value='Delete' class='btn btn-danger'>
                     </form>
-                    <a href="#" class="btn btn-primary">Edit</a>
+                    <a href="/recipes/<%=recipe._id%>/edit" class="btn btn-primary">Edit</a>
                 <% } %>
                 <form method='post' action='/recipes/<%=recipe._id%>/fork'>
                     <input type='submit' value='Fork It' class='btn btn-primary'>

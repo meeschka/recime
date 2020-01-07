@@ -36,8 +36,8 @@ const create = (req, res) => {
     let recipe = new Recipe({
         name: req.body.name,
         photo: req.body.photo,
-        ingredients: req.body.ingredients,
-        directions: req.body.directions,
+        ingredients: req.body.ingredients.filter(Boolean),
+        directions: req.body.directions.filter(Boolean),
         notes: req.body.notes,
         tags: req.body.tags.split(', '),
     })
@@ -207,6 +207,38 @@ const toTry = (req, res, next) => {
         })
     } else res.redirect('/auth/google')
 }
+const edit = (req, res, next) => {
+    Recipe.findById(req.params.id)
+        .then(recipe => {
+            res.render('recipes/edit', {
+                title: `Edit ${recipe.name}`,
+                recipe: recipe,
+                user: req.user
+            })
+        })
+        .catch(err => {
+            console.log(err);
+            res.redirect('back');
+        })
+}
+const update = (req, res, next) => {
+    let newRecipe = {
+        name: req.body.name,
+        photo: req.body.photo,
+        ingredients: req.body.ingredients.filter(Boolean),
+        directions: req.body.directions.filter(Boolean),
+        notes: req.body.notes,
+        tags: req.body.tags.split(', '),
+    }
+    Recipe.findByIdAndUpdate(req.params.id, newRecipe, {new: true})
+        .then(recipe => {
+            res.redirect(`/recipes/${recipe._id}`)
+        })
+        .catch(err => {
+            console.log(err);
+            res.redirect('back')
+        })
+}
 module.exports = {
     index,
     show,
@@ -215,5 +247,7 @@ module.exports = {
     fork,
     delete: deleteRecipe,
     toTry,
-    mine
+    mine,
+    edit,
+    update
 }
