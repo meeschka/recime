@@ -240,7 +240,7 @@ const edit = (req, res, next) => {
         })
 }
 const update = async function(req, res) {
-    console.log(req.body);
+
     let newRecipe = {
         name: req.body.name,
         ingredients: Array.isArray(req.body.ingredients) ? req.body.ingredients.filter(Boolean) : req.body.ingredients,
