@@ -64,3 +64,6 @@ a i {
   color: white;
   background-color: #005F69;
 }
+.edit-image {
+  max-height: 400px;
+}

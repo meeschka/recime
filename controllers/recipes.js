@@ -37,13 +37,23 @@ const newRecipe = (req, res) => {
         user: req.user
     })
 }
-const create = (req, res) => {
-    console.log(cloudinary.v2.uploader.upload);
-    cloudinary.v2.uploader.upload(req.file.path, {quality: 'auto'}, (err, result)=>{
-        console.log(err, result)
+const create = async function(req, res) {
+    let photo = `https://res.cloudinary.com/meeschka/image/upload/v1578446432/gjt4mikrmqujafdjpnud.gif`;
+    let photoId = 1;
+    if(req.file) {
+        try {
+            let result = await cloudinary.v2.uploader.upload(req.file.path, {quality: 'auto'});
+            photo = result.secure_url;
+            photoId = result.public_id;
+        } catch(err) {
+            console.log(err);
+            return res.redirect("back");
+        }
+    }
         let recipe = new Recipe({
             name: req.body.name,
-            photo: result.secure_url,
+            photo: photo,
+            photoId: photoId,
             ingredients: req.body.ingredients.filter(Boolean),
             directions: req.body.directions.filter(Boolean),
             notes: req.body.notes,
@@ -62,7 +72,6 @@ const create = (req, res) => {
             if (err) return res.redirect('/recipes/new');
             res.redirect('/recipes')
         })
-    })
 }
 const fork = (req, res) => {
     //orig recipe is in req.params.id

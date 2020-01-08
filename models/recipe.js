@@ -10,6 +10,7 @@ let commentSchema = new mongoose.Schema({
 let recipeSchema = new mongoose.Schema({
     name: String,
     photo: String,
+    photoId: String,
     ingredients: [String],
     directions: [String],
     notes: String,
