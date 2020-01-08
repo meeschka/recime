@@ -28,5 +28,6 @@ router.put('/:id', upload.single('image'), recipeCtrl.update);
 router.post('/:id/fork', auth.isLoggedIn, recipeCtrl.fork);
 router.get('/:id/edit', auth.isLoggedIn, auth.isOwner, recipeCtrl.edit);
 router.delete('/:id', auth.isLoggedIn, auth.isOwner, recipeCtrl.delete);
+router.post('/search', recipeCtrl.search);
 
 module.exports = router;

@@ -268,6 +268,22 @@ const update = async function(req, res) {
             res.redirect('back')
         })
 }
+const search = (req, res) => {
+    let query = {}
+    query.name= new RegExp(req.body.search, 'i');
+    Recipe.find(query)
+    .then(recipes => {
+        res.render('recipes/index', {
+            title: search,
+            recipes: recipes,
+            user: req.user
+        })
+    })
+    .catch(err => {
+        console.log(err);
+        res.redirect('back');
+    })
+}
 
 module.exports = {
     index,
@@ -280,4 +296,5 @@ module.exports = {
     mine,
     edit,
     update,
+    search
 }
