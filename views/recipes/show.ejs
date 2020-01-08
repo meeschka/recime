@@ -40,8 +40,13 @@
                     <% }) %>
                 </ul>
             <% } %>
-    
-            <div class='d-flex justify-content-end btn-row'>
+            <% if (recipe.tags) { %>
+                <h5>Tags</h5>
+                <% recipe.tags.forEach(tag => { %>
+                    <a href='/recipes/search/tags/<%=tag%>' class='btn-primary btn-sm'><%=tag%></a>
+                <% }) %>
+            <% } %>
+            <div class='d-flex btn-row'>
                 <% if (currentUser && currentUser.recipes.indexOf(recipe._id)>=0)  { %>
                     <form method='post' action='/recipes/<%=recipe._id%>?_method=delete'>
                         <input type='submit' value='Delete' class='btn btn-danger'>

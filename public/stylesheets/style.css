@@ -32,6 +32,7 @@ a i {
 .card-container {
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 .card {
   width: 350px;
@@ -54,6 +55,9 @@ a i {
 }
 .btn-row .btn {
   margin-right: 20px;
+}
+.btn-row {
+  margin-top: 40px;
   margin-bottom: 40px;
 }
 .card-img-top {

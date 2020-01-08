@@ -271,11 +271,12 @@ const update = async function(req, res) {
 }
 const search = (req, res) => {
     let query = {}
-    query.name= new RegExp(req.body.search, 'i');
+    const val = req.query.name||req.params.query;
+    query[req.params.type]= new RegExp(val, 'i');
     Recipe.find(query).sort({'forks':-1})
     .then(recipes => {
         res.render('recipes/index', {
-            title: search,
+            title: req.params.query,
             recipes: recipes,
             user: req.user
         })
@@ -284,9 +285,6 @@ const search = (req, res) => {
         console.log(err);
         res.redirect('back');
     })
-    // req.body.search is the search term
-    // req.body.mine is 'on' when the user has checked in
-
 }
 
 module.exports = {
