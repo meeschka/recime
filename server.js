@@ -6,7 +6,7 @@ const logger = require('morgan');
 const session = require('express-session');
 const passport = require('passport');
 const methodOverride = require('method-override');
-const cors = require('cors');
+const cloudinary = require('cloudinary');
 
 require('dotenv').config();
 require('./config/database');
@@ -37,7 +37,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(methodOverride('_method'))
+app.use(methodOverride('_method'));
+
 
 app.use(function(req, res, next){
   res.locals.currentUser = req.user;

@@ -3,11 +3,10 @@ const User = require('../models/user')
 const multer = require('multer');
 const cloudinary = require('cloudinary');
 cloudinary.config({ 
-  cloud_name: process.env.CLOUDINARY_NAME, 
-  api_key: process.env.CLOUDINARY_API_KEY, 
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
-
+    cloud_name: 'meeschka', 
+    api_key: process.env.CLOUDINARY_API_KEY, 
+    api_secret: process.env.CLOUDINARY_API_SECRET
+  });
 const index = (req, res) => {
     Recipe.find({}, function(err, recipes){
         res.render('recipes/index', {
@@ -39,10 +38,9 @@ const newRecipe = (req, res) => {
     })
 }
 const create = (req, res) => {
-    cloudinary.v2.uploader.upload(req.file.path, {quality: 'auto'}, function(result, err){
-        if (err) {
-            console.log(err);
-        }
+    console.log(cloudinary.v2.uploader.upload);
+    cloudinary.v2.uploader.upload(req.file.path, {quality: 'auto'}, (err, result)=>{
+        console.log(err, result)
         let recipe = new Recipe({
             name: req.body.name,
             photo: result.secure_url,

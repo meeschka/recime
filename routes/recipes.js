@@ -3,13 +3,6 @@ const router = express.Router();
 const recipeCtrl = require('../controllers/recipes.js');
 const auth = require('../middleware/auth');
 const multer = require('multer');
-const cloudinary = require('cloudinary');
-cloudinary.config({ 
-  cloud_name: process.env.CLOUDINARY_NAME, 
-  api_key: process.env.CLOUDINARY_API_KEY, 
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
-
 let storage = multer.diskStorage({
     filename: function(req, file, callback) {
       callback(null, Date.now() + file.originalname);
@@ -17,7 +10,6 @@ let storage = multer.diskStorage({
   });
 let imageFilter = function (req, file, cb) {
     // accept image files only
-    console.log('image filter');
     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
         return cb(new Error('Only image files are allowed!'), false);
     }
