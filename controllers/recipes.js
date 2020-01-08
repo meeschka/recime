@@ -8,12 +8,17 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
   });
 const index = (req, res) => {
-    Recipe.find({}, function(err, recipes){
+    Recipe.find({}).sort({'forks':-1})
+    .then(recipes => {
         res.render('recipes/index', {
             title: 'Recipes',
             recipes,
             user: req.user
         })
+    })
+    .catch(err => {
+        console.log(err);
+        res.redirect('back')
     })
 }
 const show = (req, res) => {
@@ -115,10 +120,6 @@ const fork = (req, res) => {
             console.log(err);
             res.redirect('/recipes');
         })
-    //find recipe and copy to new recipe. add orig to parent.
-    //add new recipe to forks in orig
-    //add new recipe to parent user model
-    //redirect to new recipe show page or old one?
 }
 const deleteRecipe = (req, res) => {
     //deletes recipes, removes recipe list from user list, removes recipe as a parent or fork from all other recipes
@@ -271,7 +272,7 @@ const update = async function(req, res) {
 const search = (req, res) => {
     let query = {}
     query.name= new RegExp(req.body.search, 'i');
-    Recipe.find(query)
+    Recipe.find(query).sort({'forks':-1})
     .then(recipes => {
         res.render('recipes/index', {
             title: search,
@@ -283,6 +284,9 @@ const search = (req, res) => {
         console.log(err);
         res.redirect('back');
     })
+    // req.body.search is the search term
+    // req.body.mine is 'on' when the user has checked in
+
 }
 
 module.exports = {
