@@ -67,3 +67,26 @@ a i {
 .edit-image {
   max-height: 400px;
 }
+#search-input {
+  line-height: 2em;
+  background: none;
+  padding: 0.1em;
+  font-size: 1.5em;
+  border: none;
+  border-bottom: 2px solid #005F69;
+  margin-right: 1em;
+  margin-bottom:0.5em;
+  width: 20em;
+}
+.card-container {
+  margin-top: 2em;
+}
+.btn-space {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+#search-row {
+  display: flex;
+  justify-content: center;
+  display: none;
+}

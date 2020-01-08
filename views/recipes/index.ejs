@@ -4,10 +4,31 @@
     <h1 class='display-1'>Recipes</h1>
   </div>
 </section>
-<a class='btn btn-primary' href='/recipes/new'>Add a New Recipe!</a>
+<section class='btn-row d-flex justify-content-center'>
+  <a class='btn btn-primary btn-space' href='/recipes/new'>Add a New Recipe</a>
+  <a class='btn btn-primary btn-space' href='/recipes/new'>Search</a>
+</section>
+<section  id='search-row'>
+  <form>
+    <div id='search-bar'>
+      <input type='text' name='search' id='search-input' class='text-center'>
+      <button type='submit' class='btn btn-primary'><i class="fas fa-search"></i></button>
+    </div>
+    <div class='d-flex justify-content-around'>
+      <label class='checkbox-container'>
+        Just My Recipes
+        <input type='checkbox' name='mine'>
+      </label>
+      <label class='checkbox-container'>
+       Search Tags
+        <input type='checkbox' name='tags'>
+      </label>
+    </div>
+  </form>
+</section>
 <section class='container card-container'>
   <% if (recipes.length<1) { %>
-    <h1>Looks like you haven't saved any recipes here! You can browse recipes <a href='/recipes'>here!</a></h1>
+    <h1 class='text-center'>Looks like you haven't saved any recipes! You can browse recipes <a href='/recipes'>here!</a></h1>
   <% } %>
   <% recipes.forEach(recipe=> { %>
     <div class="card">
