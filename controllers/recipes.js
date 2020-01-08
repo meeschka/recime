@@ -239,14 +239,25 @@ const edit = (req, res, next) => {
             res.redirect('back');
         })
 }
-const update = (req, res, next) => {
+const update = async function(req, res) {
+    console.log(req.body);
     let newRecipe = {
         name: req.body.name,
-        photo: req.body.photo,
-        ingredients: req.body.ingredients.filter(Boolean),
-        directions: req.body.directions.filter(Boolean),
+        ingredients: Array.isArray(req.body.ingredients) ? req.body.ingredients.filter(Boolean) : req.body.ingredients,
+        directions: Array.isArray(req.body.directions) ? req.body.directions.filter(Boolean) : req.body.directions,
         notes: req.body.notes,
         tags: req.body.tags.split(', '),
+    }
+
+    if(req.file) {
+        try {
+            let result = await cloudinary.v2.uploader.upload(req.file.path, {quality: 'auto'});
+            newRecipe.photo = result.secure_url;
+            newRecipe.photoId = result.public_id;
+        } catch(err) {
+            console.log(err);
+            return res.redirect("back");
+        }
     }
     Recipe.findByIdAndUpdate(req.params.id, newRecipe, {new: true})
         .then(recipe => {
@@ -258,19 +269,19 @@ const update = (req, res, next) => {
         })
 }
 
-let storage = multer.diskStorage({
-    filename: function(req, file, callback) {
-      callback(null, Date.now() + file.originalname);
-    }
-  });
-let imageFilter = function (req, file, cb) {
-    // accept image files only
-    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
-        return cb(new Error('Only image files are allowed!'), false);
-    }
-    cb(null, true);
-};
-let upload = multer({ storage: storage, fileFilter: imageFilter})
+// let storage = multer.diskStorage({
+//     filename: function(req, file, callback) {
+//       callback(null, Date.now() + file.originalname);
+//     }
+//   });
+// let imageFilter = function (req, file, cb) {
+//     // accept image files only
+//     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+//         return cb(new Error('Only image files are allowed!'), false);
+//     }
+//     cb(null, true);
+// };
+// let upload = multer({ storage: storage, fileFilter: imageFilter})
 
 module.exports = {
     index,
@@ -283,5 +294,4 @@ module.exports = {
     mine,
     edit,
     update,
-    upload
 }
