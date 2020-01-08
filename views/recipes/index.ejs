@@ -1,7 +1,7 @@
 <%- include ../partials/header.ejs %>
 <section class='header'>
   <div class='jumbotron jumbo-header'>
-    <h1 class='display-1'>RECIPES</h1>
+    <h1 class='display-1'>Recipes</h1>
   </div>
 </section>
 <a class='btn btn-primary' href='/recipes/new'>Add a New Recipe!</a>
@@ -14,7 +14,7 @@
       <img src="<%=recipe.photo%>" class="card-img-top" alt="<%=recipe.name%>">
       <div class="card-body">
         <h5 class="card-title"><%=recipe.name%></h5>
-        <p class="card-text"></p>
+        <p class="card-text"><%=recipe.forks.length%> forks</p>
         <a href="/recipes/<%=recipe._id%>" class="btn btn-primary">See Details</a>
       </div>
     </div>

@@ -12,7 +12,7 @@ module.exports.recipes=[
             'Pulse flour and salt together in food processor',
             'Add butter and lard to food processor, pulse until until only chickpea-sized pieces remain', 
             'Add water gradually while pulsing until the dough just jholds together when pressed with hands',
-            'refrigerate dough in plastic until read to use'],
+            'Refrigerate dough in plastic until read to use'],
         notes: 'Recipe was modified to account for the small size of my food processor.',
         tags: ['Make-ahead']
     },
