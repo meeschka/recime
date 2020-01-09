@@ -7,6 +7,8 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY, 
     api_secret: process.env.CLOUDINARY_API_SECRET
   });
+const data = require('../data');
+
 const index = (req, res) => {
     Recipe.find({}).sort({'forks':-1})
     .then(recipes => {
@@ -26,7 +28,6 @@ const show = (req, res) => {
         .populate('forks')
         .populate({path: 'comments.user'})
         .then(recipe => {
-            console.log(recipe);
             res.render('recipes/show', {
                 title: recipe.eventNames,
                 recipe,
@@ -291,6 +292,25 @@ const search = (req, res) => {
         res.redirect('back');
     })
 }
+const populate = (req, res) => {
+    console.log(data);
+    Recipe.insertMany(data.recipes)
+    .then((recipes) => {
+        recipes.forEach(recipe => {
+            User.findById(req.user._id, function(err, user){
+                user.recipes.push(recipe._id);
+                user.save(function(err) {
+                    console.log(err);
+                })
+            })
+        })
+        res.redirect('/recipes')
+    }) 
+    .catch(err => {
+        console.log(err);
+        res.redirect('back');
+    })
+}
 
 module.exports = {
     index,
@@ -303,5 +323,6 @@ module.exports = {
     mine,
     edit,
     update,
-    search
+    search,
+    populate
 }

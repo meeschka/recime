@@ -40,7 +40,6 @@
                     <% }) %>
                 </ul>
             <% } %>
-            <% console.log(recipe.tags) %>
             <% if (recipe.tags.length>0) { %>
                 <h5>Tags</h5>
                 <% recipe.tags.forEach(tag => { %>
@@ -64,7 +63,6 @@
                 <% } %>
             </div>
             <h4>Comments</h4>
-            <% console.log(recipe.comments)%>
             <% if (user) { %>
                 <button class='btn btn-primary' id='add-comment'>Add a comment</button>
             <% } %>
@@ -87,19 +85,19 @@
                             <p><strong><%=comment.user.name%></strong></p>
                             <p id='comment-text'><%=comment.comment%></p>
                             <% if (user)  { %>
-                            <% if (user._id.toString() == comment.user._id.toString()) { %>
-                            <form method='post' id='edit-comment-form' action='/recipes/<%=recipe._id%>/comments/<%=comment._id%>?_method=put'>
-                                <textarea name='comment' id='edit-comment-input'><%=comment.comment%></textarea>
-                                <input type='submit' value='Edit' class='btn btn-primary'>
-                            </form>
-                            <div class='d-flex comment-btns'>
-                                <button class='btn btn-secondary' id='edit-btn'>Edit Comment</button>
-                                <button class='btn btn-secondary' id='cancel-edit-btn'>Cancel Edit</button>
-                                <form method='post' action='/recipes/<%=recipe._id%>/comments/<%=comment._id%>?_method=delete'>
-                                    <input type='submit' value='Delete' class='btn btn-danger'>
+                                <% if (user._id.toString() == comment.user._id.toString()) { %>
+                                <form method='post' id='edit-comment-form' action='/recipes/<%=recipe._id%>/comments/<%=comment._id%>?_method=put'>
+                                    <textarea name='comment' id='edit-comment-input'><%=comment.comment%></textarea>
+                                    <input type='submit' value='Edit' class='btn btn-primary'>
                                 </form>
-                            </div>
-                            <% } %>
+                                <div class='d-flex comment-btns'>
+                                    <button class='btn btn-secondary' id='edit-btn'>Edit Comment</button>
+                                    <button class='btn btn-secondary' id='cancel-edit-btn'>Cancel Edit</button>
+                                    <form method='post' action='/recipes/<%=recipe._id%>/comments/<%=comment._id%>?_method=delete'>
+                                        <input type='submit' value='Delete' class='btn btn-danger'>
+                                    </form>
+                                </div>
+                                <% } %>
                             <% } %>
                         </div>
                     <% }) %>
