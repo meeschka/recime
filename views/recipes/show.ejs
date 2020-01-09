@@ -1,7 +1,7 @@
 <%- include ../partials/header.ejs %>
 <section class='header'>
     <div class='jumbotron jumbo-header'>
-        <p class='bigger'><%=recipe.name%></p>
+        <h1 class='display-1'><%=recipe.name%></h1>
     </div>
 </section>
 <section class='container'>
@@ -40,19 +40,14 @@
                     <% }) %>
                 </ul>
             <% } %>
-            <% if (recipe.tags) { %>
+            <% console.log(recipe.tags) %>
+            <% if (recipe.tags.length>0) { %>
                 <h5>Tags</h5>
                 <% recipe.tags.forEach(tag => { %>
                     <a href='/recipes/search/tags/<%=tag%>' class='btn-primary btn-sm'><%=tag%></a>
                 <% }) %>
             <% } %>
             <div class='d-flex btn-row'>
-                <% if (currentUser && currentUser.recipes.indexOf(recipe._id)>=0)  { %>
-                    <form method='post' action='/recipes/<%=recipe._id%>?_method=delete'>
-                        <input type='submit' value='Delete' class='btn btn-danger'>
-                    </form>
-                    <a href="/recipes/<%=recipe._id%>/edit" class="btn btn-primary">Edit</a>
-                <% } %>
                 <form method='post' action='/recipes/<%=recipe._id%>/fork'>
                     <input type='submit' value='Fork It' class='btn btn-primary'>
                 </form>
@@ -61,9 +56,61 @@
                 <% } else if (currentUser) { %>
                     <button type="button" class="btn btn-primary totry-btn">Mark as 'To Try'</button>
                 <% } %>
+                <% if (currentUser && currentUser.recipes.indexOf(recipe._id)>=0)  { %>
+                    <a href="/recipes/<%=recipe._id%>/edit" class="btn btn-primary">Edit</a>
+                    <form method='post' action='/recipes/<%=recipe._id%>?_method=delete'>
+                        <input type='submit' value='Delete' class='btn btn-danger'>
+                    </form>
+                <% } %>
             </div>
+            <h4>Comments</h4>
+            <% console.log(recipe.comments)%>
+            <% if (user) { %>
+                <button class='btn btn-primary' id='add-comment'>Add a comment</button>
+            <% } %>
+            <div id='comment-box'>
+                <form action='/recipes/<%=recipe._id%>/comments' method='POST'>
+                    <div class='form-group'>
+                        <label for='notes'>Comment</label>
+                        <textarea class='form-control' name='comment'></textarea>
+                    </div>
+                    <div class='d-flex justify-content-around'>
+                        <input type='submit' class="btn btn-primary" value='Add Comment'>
+                        <a href="/recipes" class="btn btn-danger" id='cancel-comment'>Cancel</a>
+                    </div>
+                </form>
+            </div>
+            <div class='card-box'>
+                <% if (recipe.comments.length>0) { %>
+                    <% recipe.comments.forEach(comment => { %>
+                        <div class='card card-block'>
+                            <p><strong><%=comment.user.name%></strong></p>
+                            <p id='comment-text'><%=comment.comment%></p>
+                            <% if (user)  { %>
+                            <% if (user._id.toString() == comment.user._id.toString()) { %>
+                            <form method='post' id='edit-comment-form' action='/recipes/<%=recipe._id%>/comments/<%=comment._id%>?_method=put'>
+                                <textarea name='comment' id='edit-comment-input'><%=comment.comment%></textarea>
+                                <input type='submit' value='Edit' class='btn btn-primary'>
+                            </form>
+                            <div class='d-flex comment-btns'>
+                                <button class='btn btn-secondary' id='edit-btn'>Edit Comment</button>
+                                <button class='btn btn-secondary' id='cancel-edit-btn'>Cancel Edit</button>
+                                <form method='post' action='/recipes/<%=recipe._id%>/comments/<%=comment._id%>?_method=delete'>
+                                    <input type='submit' value='Delete' class='btn btn-danger'>
+                                </form>
+                            </div>
+                            <% } %>
+                            <% } %>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p>No one has commented on this recipe.</p>
+                <% } %>
+            </div>
+            
         </div>
     </div>
 </section>
 <script src="/javascripts/totry.js" defer></script>
+<script src="/javascripts/comment.js" defer></script>
 <%- include ../partials/footer.ejs %>

@@ -24,7 +24,9 @@ const index = (req, res) => {
 const show = (req, res) => {
     Recipe.findById(req.params.id)
         .populate('forks')
+        .populate({path: 'comments.user'})
         .then(recipe => {
+            console.log(recipe);
             res.render('recipes/show', {
                 title: recipe.eventNames,
                 recipe,
@@ -55,6 +57,10 @@ const create = async function(req, res) {
             return res.redirect("back");
         }
     }
+    let tags = req.body.tags.split(',');
+    tags.forEach(tag => {
+        if (tag === '') tags.splice(tags.indexOf(tag), 1);
+    })
         let recipe = new Recipe({
             name: req.body.name,
             photo: photo,
@@ -62,9 +68,8 @@ const create = async function(req, res) {
             ingredients: req.body.ingredients.filter(Boolean),
             directions: req.body.directions.filter(Boolean),
             notes: req.body.notes,
-            tags: req.body.tags.split(', '),
+            tags: tags
         })
-        console.log(recipe); 
         if (req.user) {
             User.findById(req.user._id, function(err, user){
                 user.recipes.push(recipe._id);

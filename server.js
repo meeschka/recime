@@ -16,7 +16,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const recipeRouter = require('./routes/recipes');
 const apiRecipeRouter = require('./routes/api/recipes');
-
+const commentRouter = require('./routes/comments');
 const app = express();
 
 // view engine setup
@@ -49,6 +49,7 @@ app.use('/', indexRouter);
 app.use('/recipes', recipeRouter)
 app.use('/users', usersRouter);
 app.use('/api/recipes', apiRecipeRouter);
+app.use('/', commentRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
