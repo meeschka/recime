@@ -55,8 +55,6 @@
                 <% } else if (currentUser) { %>
                     <button type="button" class="btn btn-primary totry-btn">Mark as 'To Try'</button>
                 <% } %>
-                <% console.log(currentUser) %>
-                <% console.log(currentUser.recipes.indexOf(recipe._id)) %>
                 <% if (currentUser && currentUser.recipes.indexOf(recipe._id)>=0)  { %>
                     <a href="/recipes/<%=recipe._id%>/edit" class="btn btn-primary">Edit</a>
                     <form method='post' action='/recipes/<%=recipe._id%>?_method=delete'>

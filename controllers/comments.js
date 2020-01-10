@@ -11,14 +11,6 @@ const create = (req, res) => {
                 res.redirect(`/recipes/${recipe._id}`)
             })
         })
-        // .then(recipe => {
-        //     req.body.user = req.user._id;
-        //     recipe.comments.push(req.body);
-        //     recipe.save(function(err){
-        //         if (err) return err;
-        //         return recipe;
-        //     })
-        // })
         .catch(err=> {
             console.log(err);
             res.redirect('back')
@@ -30,11 +22,7 @@ const update = (req, res) => {
         '$set': {'comments.$.comment' : req.body.comment}
     }, {new: true})
     .then(recipe => {
-        res.render('recipes/show', {
-            title: recipe.name,
-            recipe: recipe,
-            user: req.user
-        })
+        res.redirect(`/recipes/${recipe._id}`)
     })
     .catch(err => {
         console.log(err);
@@ -46,11 +34,7 @@ const deleteComment = (req, res) => {
         if (err) {
             res.redirect('back');
         }
-        res.render('recipes/show', {
-            title: recipe.name,
-            recipe: recipe,
-            user: req.user
-        })
+        res.redirect(`/recipes/${recipe._id}`)
     })
 }
 

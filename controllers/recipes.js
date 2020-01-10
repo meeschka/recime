@@ -182,9 +182,9 @@ const deleteRecipe = (req, res) => {
                                         })
                                     })
                                     .catch(err => {
-                                        recipe.parentRecipe = '';
+                                        recipe.parentRecipe = undefined;
                                     })
-                            } else recipe.parentRecipe = ''; 
+                            } else recipe.parentRecipe = undefined; 
                             recipe.save(function(err){
                                 console.log(err);
                             })
