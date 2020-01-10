@@ -55,6 +55,8 @@
                 <% } else if (currentUser) { %>
                     <button type="button" class="btn btn-primary totry-btn">Mark as 'To Try'</button>
                 <% } %>
+                <% console.log(currentUser) %>
+                <% console.log(currentUser.recipes.indexOf(recipe._id)) %>
                 <% if (currentUser && currentUser.recipes.indexOf(recipe._id)>=0)  { %>
                     <a href="/recipes/<%=recipe._id%>/edit" class="btn btn-primary">Edit</a>
                     <form method='post' action='/recipes/<%=recipe._id%>?_method=delete'>
@@ -81,7 +83,7 @@
             <div class='card-box'>
                 <% if (recipe.comments.length>0) { %>
                     <% recipe.comments.forEach(comment => { %>
-                        <div class='card card-block'>
+                        <div class='card card-block shadow-sm'>
                             <p><strong><%=comment.user.name%></strong></p>
                             <p id='comment-text'><%=comment.comment%></p>
                             <% if (user)  { %>

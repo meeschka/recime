@@ -97,18 +97,21 @@ const fork = (req, res) => {
                 tags: recipe.tags,
                 parentRecipe: recipe._id
             });
-            if (req.user) {
-                User.findById(req.user._id, function(err, user){
-                    user.recipes.push(newRecipe._id);
-                    user.save(function(err) {
-                        console.log(err);
-                    })
-                })
-            }
             newRecipe.save(function(err) {
                 if (err) return res.redirect(`/recipes/${newRecipe.parentRecipe}`);
             })
             return newRecipe;
+        })
+        .then (async function(newRecipe) {
+            if (req.user) {
+                await User.findById(req.user._id, async function(err, user){
+                    user.recipes.push(newRecipe._id);
+                    await user.save(function(err) {
+                        console.log(err);
+                    })
+                })
+                return newRecipe;
+            } else return newRecipe;
         })
         .then((newRecipe)=>{
             Recipe.findById(newRecipe.parentRecipe, (err, recipe)=>{
