@@ -18,3 +18,5 @@ You can access the app [here](https://recime-project.herokuapp.com/).
 ## Next Steps
 * Flash messages to communicate to users
 * Animate form submission, loading, and headers
+* Add ability to share recipes to pinterest, facebook, etc.
+* Abiltiy to get printer-friendly version of recipe
