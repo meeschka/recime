@@ -2,7 +2,7 @@
 GA Project 2: A full-stack MEN app that allows users to store and search for recipes. Users can fork (copy) an existing recipe to make changes to suit their own tastes and needs.
 
 ## Screenshots
-![Recime Index](https://i.imgur.com/lZpknM5.png)
+![Recime Index](https://i.imgur.com/YCYonFT.png)
 ![Recipe Detail Page](https://i.imgur.com/lZpknM5.png)
 
 ## Technologies Used
